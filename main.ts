@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Finish = SpriteKind.create()
+}
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     mySprite,
@@ -194,10 +197,11 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     info.changeScoreBy(1)
     tiles.placeOnRandomTile(otherSprite, sprites.builtin.forestTiles10)
-    if (info.score() == 50) {
+    if (info.score() > 50 && mySprite.overlapsWith(chest)) {
         game.gameOver(true)
     }
 })
+let chest: Sprite = null
 let mySprite: Sprite = null
 music.play(music.stringPlayable("E B C5 A B G A F ", 120), music.PlaybackMode.LoopingInBackground)
 tiles.setCurrentTilemap(tilemap`level1`)
@@ -219,11 +223,30 @@ mySprite = sprites.create(img`
     . . f d d c f . . . . . . . . . 
     . . f f f f . . . . . . . . . . 
     `, SpriteKind.Player)
+chest = sprites.create(img`
+    . b b b b b b b b b b b b b b . 
+    b e 4 4 4 4 4 4 4 4 4 4 4 4 4 b 
+    b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+    b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+    b b b b b b b d d b b b b b b b 
+    . b b b b b b c c b b b b b b . 
+    b c c c c c b c c b c c c c c b 
+    b c c c c c c b b c c c c c c b 
+    b c c c c c c c c c c c c c c b 
+    b c c c c c c c c c c c c c c b 
+    b b b b b b b b b b b b b b b b 
+    b e e e e e e e e e e e e e e b 
+    b e e e e e e e e e e e e e e b 
+    b c e e e e e e e e e e e e c b 
+    b b b b b b b b b b b b b b b b 
+    . b b . . . . . . . . . . b b . 
+    `, SpriteKind.Finish)
 tiles.placeOnTile(mySprite, tiles.getTileLocation(0, 0))
 controller.moveSprite(mySprite)
 scene.cameraFollowSprite(mySprite)
 animation.stopAnimation(animation.AnimationTypes.All, mySprite)
-info.setLife(3)
+info.setLife(500)
+tiles.placeOnTile(chest, tiles.getTileLocation(1, 0))
 let mySprite2 = sprites.create(img`
     . . . c c c c c c c . . . . . . 
     . . c 7 f f 6 6 f f c . . . . . 
@@ -242,7 +265,7 @@ let mySprite2 = sprites.create(img`
     . . . c 6 6 6 6 6 1 1 1 1 6 f . 
     . . . . c c c c c c c c f f . . 
     `, SpriteKind.Enemy)
-mySprite2.follow(mySprite, 50)
+mySprite2.follow(mySprite, 66)
 animation.runImageAnimation(
 mySprite2,
 [img`
@@ -609,6 +632,8 @@ mySprite4.setVelocity(50, 50)
 mySprite4.setBounceOnWall(true)
 game.setGameOverEffect(false, effects.dissolve)
 tiles.placeOnTile(mySprite2, tiles.getTileLocation(6, 6))
+tiles.placeOnTile(mySprite3, tiles.getTileLocation(10, 9))
+tiles.placeOnTile(mySprite4, tiles.getTileLocation(11, 11))
 let egg = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
