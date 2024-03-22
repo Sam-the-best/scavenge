@@ -1,6 +1,12 @@
 namespace SpriteKind {
     export const Finish = SpriteKind.create()
+    export const Block = SpriteKind.create()
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Finish, function (sprite, otherSprite) {
+    if (info.score() == 50 || info.score() > 50 && mySprite.overlapsWith(chest)) {
+        game.gameOver(true)
+    }
+})
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     mySprite,
@@ -197,10 +203,9 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     info.changeScoreBy(1)
     tiles.placeOnRandomTile(otherSprite, sprites.builtin.forestTiles10)
-    if (info.score() > 50 && mySprite.overlapsWith(chest)) {
-        game.gameOver(true)
-    }
 })
+let RandomY = 0
+let RandomX = 0
 let chest: Sprite = null
 let mySprite: Sprite = null
 music.play(music.stringPlayable("E B C5 A B G A F ", 120), music.PlaybackMode.LoopingInBackground)
@@ -245,6 +250,12 @@ tiles.placeOnTile(mySprite, tiles.getTileLocation(0, 0))
 controller.moveSprite(mySprite)
 scene.cameraFollowSprite(mySprite)
 animation.stopAnimation(animation.AnimationTypes.All, mySprite)
+for (let index = 0; index < 10; index++) {
+    RandomX = randint(3, 12)
+    RandomY = randint(3, 12)
+    tiles.setTileAt(tiles.getTileLocation(RandomX, RandomY), sprites.builtin.brick)
+    tiles.setWallAt(tiles.getTileLocation(RandomX, RandomY), true)
+}
 info.setLife(500)
 tiles.placeOnTile(chest, tiles.getTileLocation(1, 0))
 let mySprite2 = sprites.create(img`
